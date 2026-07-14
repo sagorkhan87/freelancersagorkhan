@@ -1,0 +1,1240 @@
+/* =========================================================
+   ABOUT STORY — cinematic "আমার সম্পর্কে" page
+   Scoped under .as-* — built on top of the shared design
+   tokens declared in style.css (--gold, --blue-neon, --purple…)
+   ========================================================= */
+
+.as-body{
+  /* Richer multi-tone palette (navy / teal / violet / gold) replacing the
+     plain orange-black mix — every section below still uses var(--bg) /
+     var(--bg-soft), so overriding them here recolors the whole page
+     without touching any section's markup or layout. */
+  --bg:
+    radial-gradient(46% 38% at 10% 6%,  rgba(41,182,255,.14), transparent 60%),
+    radial-gradient(50% 42% at 92% 10%, rgba(184,77,255,.13), transparent 60%),
+    radial-gradient(60% 46% at 50% 100%, rgba(34,197,94,.10), transparent 65%),
+    radial-gradient(40% 34% at 78% 60%, rgba(255,193,7,.07), transparent 60%),
+    linear-gradient(180deg, #050810 0%, #0a0f1c 45%, #060911 100%);
+  --bg-soft:
+    radial-gradient(60% 60% at 20% 20%, rgba(41,182,255,.08), transparent 65%),
+    radial-gradient(60% 60% at 85% 80%, rgba(184,77,255,.08), transparent 65%),
+    linear-gradient(180deg, #0a0f1c, #060911);
+  background:var(--bg);
+  overflow-x:hidden;
+}
+/* Guard against `position:fixed` breaking: a transform, filter,
+   perspective, backdrop-filter, contain, or will-change:transform
+   on <html> or <body> makes fixed-position children measure
+   against that ancestor instead of the real viewport, so a
+   "fixed" element ends up scrolling with the page. This page's
+   liquid-glass topbar must never move, so these are neutralised
+   on the two ancestors it actually sits inside, regardless of
+   what the shared style.css sets. */
+html, .as-body{
+  transform:none !important;
+  filter:none !important;
+  perspective:none !important;
+  -webkit-backdrop-filter:none !important;
+  backdrop-filter:none !important;
+  will-change:auto !important;
+  contain:none !important;
+}
+.as-noise{
+  position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.03;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.as-back{
+  position:fixed;
+  top:22px; left:22px;
+  z-index:200;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  font-size:.82rem;
+  color:var(--white);
+  border:1px solid var(--glass-border);
+  background:rgba(5,5,5,.55);
+  backdrop-filter:blur(12px);
+  padding:9px 16px;
+  border-radius:999px;
+  transition:color .3s ease, border-color .3s ease, transform .3s ease;
+}
+.as-back:hover{ color:var(--gold); border-color:rgba(255,193,7,.4); transform:translateX(-4px); }
+
+.as-eyebrow{
+  font-size:.8rem;
+  font-weight:700;
+  letter-spacing:1.4px;
+  text-transform:uppercase;
+  color:var(--gold);
+  margin:0 0 10px;
+}
+
+.as-section-head{
+  max-width:640px;
+  margin:0 auto 54px;
+  text-align:center;
+  padding-inline:24px;
+  position:relative;
+  z-index:2;
+}
+.as-section-head h2{
+  margin:0 0 10px;
+  font-size:clamp(1.7rem, 3.6vw, 2.5rem);
+  font-weight:800;
+}
+.as-section-hint{
+  margin:0;
+  color:var(--muted);
+  font-size:.9rem;
+}
+
+.as-reveal{ opacity:0; transform:translateY(26px); }
+
+/* =========================================================
+   1. MONEY-FLOW MAP
+   ========================================================= */
+.as-map{
+  position:relative;
+  height:86vh;
+  min-height:560px;
+  overflow:hidden;
+  background:#02040a;
+  perspective:1400px;
+}
+
+/* ---------------------------------------------------------
+   Real WebGL 3D globe (Three.js) — an actual rotating sphere
+   with a textured world map, plotted from real remittance
+   source-country coordinates, not a flat backdrop photo.
+--------------------------------------------------------- */
+.as-globe-host{
+  position:absolute; inset:0; z-index:0;
+}
+.as-globe-host canvas{
+  position:absolute; inset:0;
+  width:100% !important; height:100% !important;
+  display:block;
+  cursor:grab;
+  touch-action:none;
+}
+.as-globe-host canvas:active{ cursor:grabbing; }
+
+.as-globe-vignette{
+  position:absolute; inset:0; z-index:2;
+  background:
+    radial-gradient(120% 90% at 50% 100%, rgba(0,0,0,.45), transparent 55%),
+    radial-gradient(70% 40% at 50% 0%, rgba(2,4,10,.6), transparent 70%);
+  pointer-events:none;
+}
+
+.as-globe-loading{
+  position:absolute; inset:0; z-index:1;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:10px;
+  color:var(--muted);
+  font-size:.85rem;
+  transition:opacity .5s ease;
+}
+.as-globe-loading i{ font-size:1.8rem; color:var(--gold); }
+.as-globe-loading.is-hidden{ opacity:0; pointer-events:none; }
+
+.as-map-total{
+  margin:12px 0 0;
+  font-size:.82rem;
+  color:var(--muted);
+}
+.as-map-total span{
+  color:var(--gold);
+  font-weight:800;
+  font-family:var(--font-display);
+  font-size:1rem;
+}
+.as-map-total i{ margin-left:4px; opacity:.7; }
+
+.as-map-caption{
+  position:absolute;
+  left:50%; bottom:100px;
+  transform:translateX(-50%);
+  z-index:4;
+  text-align:center;
+  max-width:640px;
+  padding-inline:20px;
+}
+.as-map-caption h2{
+  margin:0;
+  font-family:var(--font-bangla);
+  font-size:clamp(1.3rem, 3vw, 2rem);
+  font-weight:800;
+  color:var(--white);
+  text-shadow:0 2px 12px rgba(0,0,0,.7);
+}
+
+.as-scroll-cue{
+  position:absolute;
+  left:50%; bottom:30px;
+  transform:translateX(-50%);
+  z-index:5;
+  display:flex; flex-direction:column; align-items:center; gap:8px;
+  color:var(--muted);
+  font-size:.72rem;
+}
+.as-scroll-cue span{
+  width:22px; height:36px;
+  border:2px solid var(--glass-border);
+  border-radius:14px;
+  position:relative;
+}
+.as-scroll-cue span::after{
+  content:"";
+  position:absolute;
+  top:6px; left:50%;
+  width:4px; height:8px;
+  border-radius:2px;
+  background:var(--gold);
+  transform:translateX(-50%);
+  animation:asCueDrop 1.6s ease-in-out infinite;
+}
+@keyframes asCueDrop{
+  0%{ opacity:1; top:6px; }
+  70%{ opacity:0; top:20px; }
+  100%{ opacity:0; top:6px; }
+}
+
+/* =========================================================
+   2. HERO
+   ========================================================= */
+.as-hero{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  text-align:center;
+  padding:18px 24px 44px;
+  background:
+    radial-gradient(60% 55% at 50% 20%, rgba(255,193,7,.10), transparent 65%),
+    var(--bg);
+}
+.as-hero .as-eyebrow{ text-transform:none; letter-spacing:.3px; font-size:.95rem; color:var(--muted); }
+
+/* ---------------------------------------------------------
+   Liquid-glass title capsule — a floating pill, detached
+   from the edge, with a real sea photo visible (not crushed
+   to near-black) behind frosted glass, a soft gold rim glow,
+   and a specular top highlight — reads as an actual glass
+   object catching light, not a flat coloured bar.
+--------------------------------------------------------- */
+.as-liquid-topbar{
+  position:fixed;
+  top:16px; left:50%;
+  transform:translateX(-50%);
+  width:min(92%, 480px);
+  height:54px;
+  z-index:100;
+  border-radius:999px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  overflow:hidden;
+  pointer-events:none;
+}
+.as-liquid-topbar::before{
+  content:"";
+  position:absolute;
+  inset:-30px;
+  background-image:url("https://images.unsplash.com/photo-1530053969600-caed2596d242?fm=jpg&q=60&w=1200&auto=format&fit=crop&ixlib=rb-4.1.0");
+  background-size:cover;
+  background-position:center 55%;
+  filter:blur(14px) saturate(1.7) brightness(1.05);
+  transform:scale(1.15);
+}
+.as-liquid-topbar::after{
+  content:"";
+  position:absolute; inset:0;
+  border-radius:999px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.38), rgba(255,255,255,.08) 42%, rgba(10,16,26,.30)),
+    radial-gradient(120% 240% at 50% -140%, rgba(255,255,255,.55), transparent 60%);
+  backdrop-filter:blur(6px) saturate(1.4);
+  -webkit-backdrop-filter:blur(6px) saturate(1.4);
+  border:1px solid rgba(255,255,255,.38);
+  box-shadow:
+    0 10px 30px rgba(0,0,0,.4),
+    0 0 26px rgba(255,193,7,.18),
+    inset 0 1px 0 rgba(255,255,255,.55),
+    inset 0 -8px 16px rgba(0,0,0,.12);
+}
+.as-liquid-topbar-icon{
+  position:relative; z-index:1;
+  font-size:.95rem;
+  background:linear-gradient(180deg, #fff, var(--gold));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  filter:drop-shadow(0 1px 4px rgba(0,0,0,.4));
+}
+.as-liquid-topbar-text{
+  position:relative;
+  z-index:1;
+  font-family:var(--font-bangla);
+  font-weight:800;
+  letter-spacing:.3px;
+  font-size:clamp(1rem, 2.4vw, 1.25rem);
+  color:#fff;
+  text-shadow:0 2px 12px rgba(0,0,0,.5), 0 0 22px rgba(255,193,7,.3);
+}
+@media (max-width:520px){
+  .as-liquid-topbar{ height:46px; top:12px; width:min(90%, 340px); }
+  .as-liquid-topbar-text{ font-size:.92rem; }
+}
+
+.as-hero-title{ margin:6px 0 22px; }
+.as-line{
+  display:block;
+  font-weight:800;
+  line-height:1.05;
+  font-size:clamp(2.6rem, 8vw, 5.4rem);
+  font-family:var(--font-bangla);
+}
+.as-line--sm{ font-size:clamp(2.1rem, 6.4vw, 4.3rem); }
+.as-gold{
+  color:#22e07a;
+  animation:asNameGlowCycle 9s ease-in-out infinite;
+}
+@keyframes asNameGlowCycle{
+  0%, 27%{
+    color:#22e07a;
+    text-shadow:0 0 22px rgba(34,224,122,.6), 0 0 56px rgba(34,224,122,.32);
+  }
+  33%, 60%{
+    color:#ffd400;
+    text-shadow:0 0 22px rgba(255,212,0,.6), 0 0 56px rgba(255,212,0,.32);
+  }
+  66%, 93%{
+    color:#ff5fc4;
+    text-shadow:0 0 22px rgba(255,95,196,.6), 0 0 56px rgba(255,95,196,.32);
+  }
+  100%{
+    color:#22e07a;
+    text-shadow:0 0 22px rgba(34,224,122,.6), 0 0 56px rgba(34,224,122,.32);
+  }
+}
+.as-hero-sub{
+  max-width:600px;
+  color:var(--muted);
+  font-family:var(--font-bangla);
+  font-size:1rem;
+  line-height:1.9;
+  margin:0 0 34px;
+}
+.as-hero-cta{ display:flex; gap:16px; flex-wrap:wrap; justify-content:center; }
+.as-btn{
+  padding:14px 28px;
+  border-radius:999px;
+  font-size:.9rem;
+  font-weight:700;
+  display:inline-flex;
+  align-items:center;
+  gap:9px;
+  transition:transform .3s ease, box-shadow .3s ease;
+}
+.as-btn--solid{
+  background:linear-gradient(135deg, var(--gold), var(--gold-soft));
+  color:#1a1300;
+  box-shadow:var(--gold-glow);
+}
+.as-btn--ghost{
+  border:1px solid var(--glass-border);
+  color:var(--white);
+  background:var(--glass-bg);
+}
+.as-btn:hover{ transform:translateY(-3px); }
+.as-scroll-cue--dark{ position:absolute; bottom:20px; }
+
+/* =========================================================
+   3. SKILLS SOLAR SYSTEM
+   ========================================================= */
+.as-galaxy{
+  position:relative;
+  padding:56px 0 64px;
+  background:
+    radial-gradient(70% 60% at 50% 40%, rgba(41,182,255,.08), transparent 65%),
+    var(--bg);
+  overflow:hidden;
+}
+/* heading pulled to the very top of the section as a compact
+   liquid-glass capsule, matching the timeline section's treatment */
+.as-galaxy-head{ margin:0 auto 26px; }
+.as-galaxy-glass{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:9px 20px;
+  border-radius:999px;
+  overflow:hidden;
+  isolation:isolate;
+  margin-bottom:10px;
+}
+.as-galaxy-glass::before{
+  content:"";
+  position:absolute; inset:0;
+  background:
+    radial-gradient(120% 220% at 12% -60%, rgba(255,255,255,.5), transparent 55%),
+    radial-gradient(95% 170% at 96% 140%, rgba(41,182,255,.4), transparent 60%),
+    linear-gradient(160deg, rgba(255,193,7,.22), rgba(10,16,26,.55) 72%);
+  backdrop-filter:blur(10px) saturate(1.6);
+  -webkit-backdrop-filter:blur(10px) saturate(1.6);
+  border:1px solid rgba(255,255,255,.35);
+  box-shadow:
+    0 8px 22px rgba(0,0,0,.38),
+    0 0 24px rgba(41,182,255,.2),
+    inset 0 1px 0 rgba(255,255,255,.5),
+    inset 0 -6px 12px rgba(0,0,0,.18);
+  z-index:-1;
+}
+.as-galaxy-glass-icon{
+  position:relative; z-index:1;
+  font-size:.82rem;
+  background:linear-gradient(180deg, #fff, var(--gold));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  filter:drop-shadow(0 1px 4px rgba(0,0,0,.4));
+}
+.as-galaxy-glass h2{
+  position:relative; z-index:1;
+  margin:0;
+  font-size:clamp(.92rem, 1.6vw, 1.12rem);
+  font-weight:700;
+  letter-spacing:.2px;
+  color:#fff;
+  text-shadow:0 2px 10px rgba(0,0,0,.5), 0 0 18px rgba(41,182,255,.28);
+}
+@media (max-width:520px){
+  .as-galaxy-glass{ padding:8px 16px; gap:7px; }
+}
+.as-galaxy-stage{
+  max-width:1180px;
+  margin:0 auto;
+  padding-inline:24px;
+  display:grid;
+  grid-template-columns:1.3fr .9fr;
+  align-items:center;
+  gap:30px;
+}
+.as-orbit-system{
+  position:relative;
+  width:100%;
+  aspect-ratio:1/1;
+  max-width:620px;
+  margin-inline:auto;
+}
+.as-sun{
+  position:absolute;
+  top:50%; left:50%;
+  transform:translate(-50%,-50%);
+  width:74px; height:74px;
+  border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  background:radial-gradient(circle at 35% 30%, var(--gold-soft), var(--gold) 55%, #7a5200 100%);
+  box-shadow:0 0 40px 10px rgba(255,193,7,.5), 0 0 90px 30px rgba(255,193,7,.2);
+  font-weight:800;
+  color:#1a1300;
+  font-size:1.05rem;
+  z-index:5;
+  animation:asSunPulse 3.4s ease-in-out infinite;
+}
+@keyframes asSunPulse{
+  0%,100%{ box-shadow:0 0 40px 10px rgba(255,193,7,.5), 0 0 90px 30px rgba(255,193,7,.2); }
+  50%{ box-shadow:0 0 55px 16px rgba(255,193,7,.65), 0 0 120px 40px rgba(255,193,7,.28); }
+}
+
+.as-orbit-ring{
+  position:absolute;
+  top:50%; left:50%;
+  transform:translate(-50%,-50%);
+  border:1px dashed rgba(255,255,255,.12);
+  border-radius:50%;
+}
+.as-orbit-ring--1{ width:38%; height:38%; }
+.as-orbit-ring--2{ width:64%; height:64%; }
+.as-orbit-ring--3{ width:92%; height:92%; }
+
+.as-planet{
+  position:absolute;
+  top:50%; left:50%;
+  width:58px; height:58px;
+  margin:-29px 0 0 -29px;
+  border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  flex-direction:column;
+  cursor:pointer;
+  z-index:4;
+  overflow:hidden;
+  transition:width .35s ease, height .35s ease, margin .35s ease, box-shadow .35s ease, border-color .35s ease;
+  /* glossy liquid-glass sphere, filled with the skill's own brand
+     colour (a soft white shine top-left, deepening into the true
+     colour toward the base) — same glass language as the reference
+     photo, but genuinely colourful rather than tinted-dark */
+  background:
+    radial-gradient(120% 120% at 30% 22%, rgba(255,255,255,.85), transparent 44%),
+    linear-gradient(160deg, var(--planet-tint-soft, #a855f7), var(--planet-tint, #7c3aed) 78%);
+  border:1px solid rgba(255,255,255,.55);
+  backdrop-filter:blur(6px) saturate(1.5);
+  -webkit-backdrop-filter:blur(6px) saturate(1.5);
+  box-shadow:
+    0 8px 22px rgba(0,0,0,.4),
+    0 0 26px var(--planet-glow, rgba(168,85,247,.55)),
+    inset 0 1px 0 rgba(255,255,255,.65),
+    inset 0 -10px 16px rgba(0,0,0,.22);
+}
+.as-planet::before{
+  /* bright curved specular highlight, like light catching the glass */
+  content:"";
+  position:absolute;
+  top:-25%; left:-15%;
+  width:65%; height:65%;
+  background:radial-gradient(circle, rgba(255,255,255,.75), transparent 70%);
+  transform:rotate(-20deg);
+  pointer-events:none;
+}
+.as-planet i{
+  position:relative; z-index:1;
+  font-size:1.05rem;
+  color:#fff;
+  text-shadow:0 1px 5px rgba(0,0,0,.55);
+}
+.as-planet span{
+  position:absolute;
+  bottom:-22px;
+  font-size:.62rem;
+  font-weight:700;
+  white-space:nowrap;
+  color:var(--muted);
+  left:50%; transform:translateX(-50%);
+}
+.as-planet.is-hovered,
+.as-planet.is-active{
+  width:72px; height:72px;
+  margin:-36px 0 0 -36px;
+}
+.as-planet.is-active{
+  border-color:rgba(255,255,255,.9);
+  box-shadow:
+    0 10px 26px rgba(0,0,0,.45),
+    0 0 42px var(--planet-glow, rgba(168,85,247,.7)),
+    inset 0 1px 0 rgba(255,255,255,.75),
+    inset 0 -10px 16px rgba(0,0,0,.22);
+}
+
+/* =========================================================
+   Info panel
+   ========================================================= */
+.as-info-panel{
+  position:relative;
+  background:var(--glass-bg);
+  border:1px solid var(--panel-border, var(--glass-border));
+  border-radius:var(--radius-lg);
+  padding:28px 26px;
+  backdrop-filter:blur(16px);
+  min-height:260px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:border-color .5s ease;
+}
+.as-info-panel::before{
+  /* soft colourful glow that washes the panel in the selected
+     skill's own colour — sits behind the glass, blurred */
+  content:"";
+  position:absolute;
+  inset:-2px;
+  z-index:-1;
+  border-radius:inherit;
+  background:var(--panel-glow, transparent);
+  filter:blur(30px);
+  opacity:.85;
+  transition:background .5s ease;
+}
+.as-info-panel.is-pulsing::before{ animation:asPanelPulse .9s ease; }
+@keyframes asPanelPulse{
+  0%{ opacity:.3; filter:blur(20px); }
+  45%{ opacity:1; filter:blur(38px); }
+  100%{ opacity:.85; filter:blur(30px); }
+}
+.as-info-empty{
+  text-align:center;
+  color:var(--muted);
+}
+.as-info-empty i{ font-size:1.8rem; color:var(--gold); margin-bottom:10px; display:block; opacity:.7; }
+.as-info-empty p{ margin:0; font-size:.85rem; }
+
+.as-info-body{ width:100%; animation:asInfoIn .5s cubic-bezier(.2,.8,.3,1) both; }
+.as-info-body__head{
+  display:flex; align-items:center; gap:14px; margin-bottom:18px;
+  animation:asInfoRowIn .45s ease both; animation-delay:.05s;
+}
+.as-info-body__icon{
+  width:48px; height:48px; border-radius:14px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.3rem;
+  flex:0 0 auto;
+}
+.as-info-body__head h3{ margin:0; font-size:1.2rem; font-weight:800; }
+.as-info-row{
+  display:flex; justify-content:space-between;
+  padding:10px 0;
+  border-top:1px solid var(--glass-border);
+  font-size:.85rem;
+  animation:asInfoRowIn .45s ease both;
+}
+.as-info-row:nth-child(2){ animation-delay:.12s; }
+.as-info-row:nth-child(3){ animation-delay:.19s; }
+.as-info-row:nth-child(4){ animation-delay:.26s; }
+.as-info-row span:first-child{ color:var(--muted); }
+.as-info-row span:last-child{ font-weight:700; }
+@keyframes asInfoIn{
+  from{ opacity:0; transform:translateX(22px); }
+  to{ opacity:1; transform:translateX(0); }
+}
+@keyframes asInfoRowIn{
+  from{ opacity:0; transform:translateY(10px); }
+  to{ opacity:1; transform:translateY(0); }
+}
+
+/* =========================================================
+   4. TIMELINE
+   ========================================================= */
+.as-timeline{
+  position:relative;
+  padding:56px 0 60px;
+  background:var(--bg);
+  overflow:hidden;
+}
+/* ambient liquid-glass glow behind the whole section — icy chrome
+   + warm red-pink, echoing the glossy reflective-spheres reference
+   photo, kept soft so it reads as light, not a solid tint */
+.as-timeline::before{
+  content:"";
+  position:absolute; inset:0;
+  z-index:0;
+  pointer-events:none;
+  background:
+    radial-gradient(36% 40% at 10% 0%,  rgba(150,200,255,.16), transparent 65%),
+    radial-gradient(32% 34% at 92% 12%, rgba(255,90,110,.14),  transparent 65%),
+    radial-gradient(40% 40% at 50% 100%, rgba(255,193,7,.06),  transparent 65%);
+}
+.as-timeline > *{ position:relative; z-index:1; }
+
+/* heading pulled to the very top of the section as a floating
+   liquid-glass capsule — same glass language as the top navbar,
+   coloured with the icy-blue / red-pink duo from the reference */
+.as-timeline-head{ margin:0 auto 26px; }
+.as-timeline-glass{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:9px 20px;
+  border-radius:999px;
+  overflow:hidden;
+  isolation:isolate;
+}
+.as-timeline-glass::before{
+  content:"";
+  position:absolute; inset:0;
+  background:
+    radial-gradient(120% 220% at 12% -60%, rgba(255,255,255,.55), transparent 55%),
+    radial-gradient(95% 170% at 96% 140%, rgba(255,90,110,.4), transparent 60%),
+    linear-gradient(160deg, rgba(150,200,255,.3), rgba(10,16,26,.55) 72%);
+  backdrop-filter:blur(10px) saturate(1.6);
+  -webkit-backdrop-filter:blur(10px) saturate(1.6);
+  border:1px solid rgba(255,255,255,.38);
+  box-shadow:
+    0 8px 22px rgba(0,0,0,.38),
+    0 0 24px rgba(150,200,255,.2),
+    inset 0 1px 0 rgba(255,255,255,.55),
+    inset 0 -6px 12px rgba(0,0,0,.18);
+  z-index:-1;
+}
+.as-timeline-glass-icon{
+  position:relative; z-index:1;
+  font-size:.82rem;
+  background:linear-gradient(180deg, #fff, #9fc9ff);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  filter:drop-shadow(0 1px 4px rgba(0,0,0,.4));
+}
+.as-timeline-glass h2{
+  position:relative; z-index:1;
+  margin:0;
+  font-size:clamp(.92rem, 1.6vw, 1.12rem);
+  font-weight:700;
+  letter-spacing:.2px;
+  color:#fff;
+  text-shadow:0 2px 10px rgba(0,0,0,.5), 0 0 18px rgba(150,200,255,.28);
+}
+@media (max-width:520px){
+  .as-timeline-glass{ padding:8px 16px; gap:7px; }
+}
+
+.as-timeline-track{
+  position:relative;
+  max-width:760px;
+  margin:0 auto;
+  padding-inline:24px;
+}
+.as-timeline-track::before{
+  content:"";
+  position:absolute;
+  left:24px; top:0; bottom:0;
+  width:2px;
+  background:linear-gradient(180deg, rgba(150,200,255,.25), rgba(255,90,110,.2));
+}
+.as-timeline-fill{
+  position:absolute;
+  left:24px; top:0;
+  width:2px; height:0%;
+  background:linear-gradient(180deg, #9fc9ff, #ff5a6e);
+  box-shadow:0 0 10px rgba(150,200,255,.5);
+  transition:height .1s linear;
+}
+.as-timeline-item{
+  position:relative;
+  padding:0 0 38px 60px;
+  opacity:0;
+  transform:translateY(24px);
+  transition:opacity .7s ease, transform .7s ease;
+}
+.as-timeline-item.is-in{ opacity:1; transform:translateY(0); }
+.as-timeline-item:last-child{ padding-bottom:0; }
+.as-timeline-dot{
+  position:absolute;
+  left:16px; top:4px;
+  width:18px; height:18px;
+  border-radius:50%;
+  overflow:hidden;
+  background:
+    radial-gradient(120% 120% at 30% 22%, rgba(255,255,255,.8), transparent 46%),
+    linear-gradient(160deg, rgba(150,200,255,.5), rgba(255,90,110,.35));
+  border:2px solid rgba(255,255,255,.55);
+  backdrop-filter:blur(4px) saturate(1.5);
+  -webkit-backdrop-filter:blur(4px) saturate(1.5);
+  box-shadow:
+    0 0 0 4px rgba(150,200,255,.14),
+    0 0 14px rgba(150,200,255,.35),
+    inset 0 1px 0 rgba(255,255,255,.6);
+}
+.as-timeline-card{
+  position:relative;
+  overflow:hidden;
+  isolation:isolate;
+  border-radius:var(--radius-md);
+  padding:18px 22px;
+}
+.as-timeline-card::before{
+  content:"";
+  position:absolute; inset:0;
+  background:
+    radial-gradient(110% 180% at 6% -30%, rgba(255,255,255,.16), transparent 55%),
+    radial-gradient(90% 140% at 100% 120%, rgba(255,90,110,.14), transparent 60%),
+    linear-gradient(160deg, rgba(150,200,255,.08), rgba(10,16,26,.35) 75%),
+    var(--glass-bg);
+  backdrop-filter:blur(10px) saturate(1.4);
+  -webkit-backdrop-filter:blur(10px) saturate(1.4);
+  border:1px solid rgba(255,255,255,.16);
+  box-shadow:
+    0 8px 24px rgba(0,0,0,.3),
+    inset 0 1px 0 rgba(255,255,255,.14);
+  z-index:-1;
+  transition:box-shadow .35s ease, border-color .35s ease;
+}
+.as-timeline-item:hover .as-timeline-card::before{
+  border-color:rgba(255,255,255,.3);
+  box-shadow:
+    0 8px 26px rgba(0,0,0,.32),
+    0 0 22px rgba(150,200,255,.18),
+    inset 0 1px 0 rgba(255,255,255,.2);
+}
+.as-timeline-tag{
+  display:inline-block;
+  font-size:.68rem;
+  font-weight:800;
+  letter-spacing:.6px;
+  color:var(--gold);
+  background:rgba(255,193,7,.1);
+  padding:4px 10px;
+  border-radius:999px;
+  margin-bottom:10px;
+}
+/* editable year / year-range badge, top-right of each card —
+   edit the text in the HTML to whatever year(s) fit, e.g.
+   "২০১২" or "২০১৪–২০১৯" */
+.as-timeline-year{
+  position:absolute;
+  top:16px; right:18px;
+  z-index:2;
+  display:inline-block;
+  font-size:.72rem;
+  font-weight:700;
+  letter-spacing:.3px;
+  color:#dce8ff;
+  background:rgba(150,200,255,.12);
+  border:1px solid rgba(150,200,255,.3);
+  padding:4px 12px;
+  border-radius:999px;
+  font-family:var(--font-mono, monospace);
+}
+.as-timeline-card h3{ margin:0 0 8px; font-size:1.1rem; font-weight:800; }
+.as-timeline-card p{ margin:0; color:var(--muted); font-size:.88rem; line-height:1.7; }
+
+/* =========================================================
+   5. PREVIOUS WORKS — FLOATING LIQUID-GLASS BOXES
+   ========================================================= */
+.as-showcase-section{
+  position:relative;
+  padding:56px 0 120px;
+  background:
+    radial-gradient(60% 50% at 50% 50%, rgba(34,197,94,.10), transparent 65%),
+    var(--bg);
+}
+/* heading sits right at the very top of the section, tight and clear
+   before any of the floating boxes below */
+.as-showcase-section .as-section-head{
+  margin:0 auto 36px;
+}
+.as-showcase-stage{
+  position:relative;
+  max-width:1080px;
+  height:min(600px, 82vw);
+  margin:0 auto;
+  padding-inline:20px;
+  overflow:hidden;
+}
+
+/* individual crystal-clear liquid-glass box, referenced from the
+   green liquid-glass photo: frosted, translucent, soft green tint,
+   a bright specular highlight top-left and a glow along the base.
+   Shows the project photo up top + a short headline underneath. */
+.as-glass-box{
+  position:absolute;
+  top:0; left:0;
+  width:clamp(150px, 20vw, 200px);
+  height:clamp(150px, 19vw, 200px);
+  border-radius:26px;
+  padding:10px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  overflow:hidden;
+  cursor:pointer;
+  will-change:transform;
+  background:
+    linear-gradient(160deg, rgba(255,255,255,.30), rgba(180,255,220,.06) 45%, rgba(34,197,94,.10)),
+    rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.45);
+  backdrop-filter:blur(14px) saturate(1.4);
+  -webkit-backdrop-filter:blur(14px) saturate(1.4);
+  box-shadow:
+    0 14px 34px rgba(0,0,0,.35),
+    0 0 26px rgba(34,197,94,.14),
+    inset 0 1px 0 rgba(255,255,255,.6),
+    inset 0 -10px 18px rgba(0,0,0,.10);
+  transition:box-shadow .35s ease, border-color .35s ease, transform .25s ease;
+}
+.as-glass-box::before{
+  /* specular highlight — the bright curved reflection seen on the
+     reference glass photo */
+  content:"";
+  position:absolute;
+  top:-30%; left:-20%;
+  width:70%; height:70%;
+  background:radial-gradient(circle, rgba(255,255,255,.55), transparent 70%);
+  transform:rotate(-20deg);
+  pointer-events:none;
+  z-index:2;
+}
+.as-glass-box__media{
+  position:relative;
+  flex:1 1 auto;
+  border-radius:18px;
+  overflow:hidden;
+  background:rgba(255,255,255,.08);
+}
+.as-glass-box__media img{
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  object-fit:cover;
+  display:block;
+}
+.as-glass-box__media::after{
+  content:"";
+  position:absolute; inset:0;
+  background:linear-gradient(200deg, rgba(34,197,94,.12), transparent 55%);
+  pointer-events:none;
+}
+.as-glass-box h4{
+  position:relative; z-index:1;
+  margin:0; padding:0 4px 2px;
+  font-size:.8rem; font-weight:800;
+  color:#fff; text-shadow:0 1px 6px rgba(0,0,0,.4);
+  text-align:center;
+  flex:0 0 auto;
+}
+.as-glass-box:hover{
+  border-color:rgba(255,255,255,.8);
+  box-shadow:
+    0 18px 40px rgba(0,0,0,.4),
+    0 0 34px rgba(34,197,94,.32),
+    inset 0 1px 0 rgba(255,255,255,.7),
+    inset 0 -10px 18px rgba(0,0,0,.10);
+  z-index:20;
+}
+@media (max-width:640px){
+  .as-showcase-stage{ height:min(520px, 130vw); }
+}
+
+/* ---------------------------------------------------------
+   Click-to-zoom lightbox — clicking a box grows it into a
+   large glass panel: big photo, headline, and a description
+   article underneath.
+--------------------------------------------------------- */
+.as-lightbox{
+  position:fixed; inset:0; z-index:500;
+  display:flex; align-items:center; justify-content:center;
+  padding:24px;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .3s ease;
+}
+.as-lightbox.is-open{ opacity:1; pointer-events:auto; }
+.as-lightbox-backdrop{
+  position:absolute; inset:0;
+  background:rgba(2,4,10,.72);
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+}
+.as-lightbox-panel{
+  position:relative;
+  z-index:1;
+  width:min(92%, 620px);
+  max-height:88vh;
+  overflow-y:auto;
+  border-radius:28px;
+  padding:22px;
+  background:
+    linear-gradient(160deg, rgba(255,255,255,.22), rgba(180,255,220,.05) 45%, rgba(34,197,94,.08)),
+    rgba(10,16,12,.55);
+  border:1px solid rgba(255,255,255,.4);
+  backdrop-filter:blur(20px) saturate(1.4);
+  -webkit-backdrop-filter:blur(20px) saturate(1.4);
+  box-shadow:
+    0 30px 80px rgba(0,0,0,.55),
+    0 0 50px rgba(34,197,94,.18),
+    inset 0 1px 0 rgba(255,255,255,.5);
+  transform:scale(.82);
+  opacity:0;
+  transition:transform .35s cubic-bezier(.2,.8,.3,1.2), opacity .3s ease;
+}
+.as-lightbox.is-open .as-lightbox-panel{
+  transform:scale(1);
+  opacity:1;
+}
+.as-lightbox-close{
+  position:absolute;
+  top:16px; right:16px;
+  z-index:2;
+  width:36px; height:36px;
+  border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(0,0,0,.35);
+  border:1px solid rgba(255,255,255,.4);
+  color:#fff;
+  font-size:.95rem;
+  cursor:pointer;
+  transition:background .25s ease, transform .25s ease;
+}
+.as-lightbox-close:hover{ background:rgba(0,0,0,.55); transform:rotate(90deg); }
+.as-lightbox-media{
+  width:100%;
+  aspect-ratio:16/10;
+  border-radius:18px;
+  overflow:hidden;
+  margin-bottom:18px;
+  box-shadow:0 10px 30px rgba(0,0,0,.35);
+}
+.as-lightbox-media img{
+  width:100%; height:100%; object-fit:cover; display:block;
+}
+.as-lightbox-panel h3{
+  margin:0 0 12px;
+  font-size:clamp(1.2rem, 2.6vw, 1.5rem);
+  font-weight:800;
+  color:#fff;
+}
+.as-lightbox-panel p{
+  margin:0;
+  color:rgba(255,255,255,.85);
+  font-size:.94rem;
+  line-height:1.85;
+}
+
+/* =========================================================
+   6. STATS (now nested inside the merged Contact section —
+      see .as-contact .as-stats-grid below for spacing)
+   ========================================================= */
+.as-stat-num{
+  font-size:clamp(2.2rem, 5vw, 3.2rem);
+  font-weight:800;
+  color:var(--gold);
+  font-family:var(--font-display);
+}
+.as-stat-plus{ font-size:1.6rem; font-weight:800; color:var(--gold); }
+.as-stat p{ margin:6px 0 0; color:var(--muted); font-size:.82rem; }
+
+/* =========================================================
+   7. CONTACT PANEL
+   ========================================================= */
+.as-contact{
+  position:relative;
+  padding:52px 24px 56px;
+  background:var(--bg);
+  overflow:hidden;
+}
+.as-contact > *{ position:relative; z-index:1; }
+
+/* stats grid now lives inside the merged section, compact
+   spacing above the heading instead of its own bordered block */
+.as-contact .as-stats-grid{
+  max-width:1000px;
+  margin:0 auto 34px;
+  display:grid;
+  grid-template-columns:repeat(4, 1fr);
+  gap:20px;
+  text-align:center;
+  padding-bottom:30px;
+}
+
+/* ---------------------------------------------------------
+   Animated scenery: two Bangladeshi-style telecom towers
+   (self-supporting lattice towers, the dominant local design,
+   each topped with a blinking red ICAO aviation warning light
+   and pulsing signal rings) with envelope "emails" flying
+   between them — the whole scene washed by a transparent
+   liquid-glass sheet (backdrop-blur) so it reads soft and
+   dreamy, yet the icons stay bright enough to read clearly
+   through the glass.
+--------------------------------------------------------- */
+.as-contact-bg{
+  position:absolute; inset:0;
+  z-index:0;
+  overflow:hidden;
+  pointer-events:none;
+}
+.as-contact-tower{
+  position:absolute;
+  color:rgba(215,230,255,.4);
+}
+.as-contact-tower--1{ left:4%; bottom:0; font-size:clamp(3.6rem,10vw,6.5rem); }
+.as-contact-tower--2{ right:6%; bottom:0; font-size:clamp(2.8rem,7.5vw,5rem); color:rgba(215,230,255,.32); }
+
+/* blinking red aviation-warning light at the tower tip, as
+   required by ICAO Annex 14 on real towers */
+.as-contact-tower::before{
+  content:"";
+  position:absolute;
+  top:2%; left:50%;
+  transform:translateX(-50%);
+  width:5px; height:5px;
+  border-radius:50%;
+  background:#ff3b3b;
+  box-shadow:0 0 8px 3px rgba(255,59,59,.85);
+  animation:asTowerBlink 1.7s ease-in-out infinite;
+}
+.as-contact-tower--2::before{ animation-delay:.6s; }
+
+/* expanding signal rings broadcasting from the tower tip */
+.as-contact-tower::after{
+  content:"";
+  position:absolute;
+  top:8%; left:50%;
+  width:10px; height:10px;
+  border:1px solid rgba(150,200,255,.55);
+  border-radius:50%;
+  transform:translate(-50%,-50%);
+  animation:asSignalPulse 3.2s ease-out infinite;
+}
+.as-contact-tower--2::after{ border-color:rgba(255,193,7,.5); animation-delay:1.4s; }
+
+@keyframes asTowerBlink{
+  0%,38%,100%{ opacity:1; }
+  50%,88%{ opacity:.12; }
+}
+@keyframes asSignalPulse{
+  0%{   width:10px; height:10px; opacity:.75; }
+  100%{ width:170px; height:170px; opacity:0; }
+}
+
+.as-contact-mail{
+  position:absolute;
+  font-size:1.3rem;
+  opacity:0;
+  filter:blur(.3px) drop-shadow(0 0 10px currentColor);
+}
+.as-contact-mail--1{
+  left:8%; top:30%; color:#9fc9ff;
+  animation:asMailFly1 7s ease-in-out infinite;
+}
+.as-contact-mail--2{
+  right:10%; top:64%; color:var(--gold);
+  animation:asMailFly2 8s ease-in-out infinite 2s;
+}
+.as-contact-mail--3{
+  left:36%; top:18%; color:#ff5a6e;
+  animation:asMailFly3 9s ease-in-out infinite 4.4s;
+}
+.as-contact-mail--4{
+  left:20%; top:80%; color:#9fc9ff;
+  animation:asMailFly1 7s ease-in-out infinite 5.2s;
+}
+/* left tower → right tower */
+@keyframes asMailFly1{
+  0%{   opacity:0;   transform:translate(0,0) scale(.7) rotate(-6deg); }
+  10%{  opacity:.95; }
+  50%{  opacity:.95; transform:translate(42vw,-70px) scale(1.05) rotate(4deg); }
+  90%{  opacity:.6; }
+  100%{ opacity:0;   transform:translate(78vw,10px) scale(.7) rotate(-6deg); }
+}
+/* right tower → left tower */
+@keyframes asMailFly2{
+  0%{   opacity:0;   transform:translate(0,0) scale(.7) rotate(8deg); }
+  10%{  opacity:.9; }
+  50%{  opacity:.9;  transform:translate(-40vw,60px) scale(1.05) rotate(-4deg); }
+  90%{  opacity:.55; }
+  100%{ opacity:0;   transform:translate(-74vw,-20px) scale(.7) rotate(8deg); }
+}
+/* short diagonal hop, mid-air */
+@keyframes asMailFly3{
+  0%{   opacity:0;   transform:translate(0,0) scale(.65) rotate(-4deg); }
+  10%{  opacity:.85; }
+  50%{  opacity:.85; transform:translate(14vw,90px) scale(.95) rotate(5deg); }
+  90%{  opacity:.5; }
+  100%{ opacity:0;   transform:translate(24vw,170px) scale(.65) rotate(-4deg); }
+}
+
+/* the transparent liquid-glass sheet itself — sits above the
+   towers/mail so they read blurred through it, tinted with the
+   same icy-blue / gold duo used across the page, kept light
+   enough that the icons stay clearly visible */
+.as-contact-glasssheet{
+  position:absolute; inset:0;
+  background:
+    radial-gradient(40% 42% at 14% 18%, rgba(150,200,255,.09), transparent 65%),
+    radial-gradient(36% 38% at 88% 14%, rgba(255,193,7,.07), transparent 65%),
+    radial-gradient(46% 42% at 50% 100%, rgba(41,182,255,.07), transparent 65%);
+  backdrop-filter:blur(2px) saturate(1.2);
+  -webkit-backdrop-filter:blur(2px) saturate(1.2);
+}
+
+/* heading pulled to the very top of the section as a compact
+   liquid-glass capsule, matching the other sections */
+.as-contact-head{ margin:0 auto 30px; }
+.as-contact-glass{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  gap:9px;
+  padding:11px 24px;
+  border-radius:999px;
+  overflow:hidden;
+  isolation:isolate;
+}
+.as-contact-glass::before{
+  content:"";
+  position:absolute; inset:0;
+  background:
+    radial-gradient(120% 220% at 12% -60%, rgba(255,255,255,.5), transparent 55%),
+    radial-gradient(95% 170% at 96% 140%, rgba(41,182,255,.4), transparent 60%),
+    linear-gradient(160deg, rgba(255,193,7,.22), rgba(10,16,26,.55) 72%);
+  backdrop-filter:blur(10px) saturate(1.6);
+  -webkit-backdrop-filter:blur(10px) saturate(1.6);
+  border:1px solid rgba(255,255,255,.35);
+  box-shadow:
+    0 8px 22px rgba(0,0,0,.38),
+    0 0 24px rgba(41,182,255,.2),
+    inset 0 1px 0 rgba(255,255,255,.5),
+    inset 0 -6px 12px rgba(0,0,0,.18);
+  z-index:-1;
+}
+.as-contact-glass-icon{
+  position:relative; z-index:1;
+  font-size:1rem;
+  background:linear-gradient(180deg, #fff, var(--gold));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  filter:drop-shadow(0 1px 4px rgba(0,0,0,.4));
+}
+.as-contact-glass h2{
+  position:relative; z-index:1;
+  margin:0;
+  font-size:clamp(1.1rem, 2.1vw, 1.4rem);
+  font-weight:700;
+  letter-spacing:.2px;
+  color:#fff;
+  text-shadow:0 2px 10px rgba(0,0,0,.5), 0 0 18px rgba(41,182,255,.28);
+}
+@media (max-width:520px){
+  .as-contact-glass{ padding:8px 16px; gap:7px; }
+  .as-contact-tower--1, .as-contact-tower--2{ opacity:.6; }
+}
+
+.as-contact-panel{
+  max-width:900px;
+  margin:0 auto;
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  justify-content:center;
+  margin-top:28px;
+}
+.as-contact-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:8px 14px;
+  border-radius:var(--radius-md);
+  background:var(--glass-bg);
+  border:1px solid var(--glass-border);
+  backdrop-filter:blur(10px);
+  font-weight:700;
+  font-size:.72rem;
+  transition:transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+}
+.as-contact-btn i{ font-size:.82rem; color:var(--blue-neon); }
+.as-contact-btn:hover{
+  transform:translateY(-4px);
+  border-color:rgba(41,182,255,.45);
+  box-shadow:var(--blue-glow);
+}
+.as-contact-btn--gold i{ color:var(--gold); }
+.as-contact-btn--gold:hover{
+  border-color:rgba(255,193,7,.5);
+  box-shadow:var(--gold-glow);
+}
+
+/* =========================================================
+   Responsive
+   ========================================================= */
+@media (max-width:900px){
+  .as-galaxy-stage{ grid-template-columns:1fr; }
+  .as-info-panel{ max-width:520px; margin-inline:auto; }
+}
+@media (max-width:640px){
+  .as-stats-grid{ grid-template-columns:repeat(2, 1fr); }
+}
+
+/* compact footer for this page — overrides the shared site-wide
+   footer sizing with a more specific selector */
+.as-body .footer{
+  padding:10px 24px;
+  font-size:.68rem;
+  line-height:1.4;
+}

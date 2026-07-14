@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en" style="scroll-behavior: smooth;">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Freelancer Sagor Khan | Digital marketing , AI Specialist And Creative Thinker</title>
+<meta name="description" content="Portfolio of Freelancer Sagor Khan — Digital Marketing Specialist, AI Specialist, Creative Thinker.">
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Hind+Siliguri:wght@400;500;600&display=swap" rel="stylesheet">
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="olympiad-hub.css">
+<link rel="stylesheet" href="notice-badge.css">
+</head>
+<body>
+
+<!-- ===== Sliding notice bar =====
+     Edit the notice text in data.js -> noticeText
+==================================== -->
+<div class="notice-bar" id="noticeBar">
+  <div class="notice-track" id="noticeTrack"></div>
+</div>
+
+<!-- ===== Background FX layer ===== -->
+<div class="bg-fx">
+  <canvas id="particle-canvas"></canvas>
+  <div class="circuit-lines"></div>
+  <div class="glow-orb glow-orb--gold"></div>
+  <div class="glow-orb glow-orb--blue"></div>
+</div>
+
+<!-- ===== Falling / cursor money layer ===== -->
+<canvas id="moneyCanvas" class="money-canvas"></canvas>
+
+<!-- ===== Live local-time clock ===== -->
+<div class="clock-widget" id="clockWidget">
+  <svg class="clock-face" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="100" cy="100" r="94" class="clock-ring"></circle>
+    <line class="clock-tick" x1="100" y1="10" x2="100" y2="22" transform="rotate(0 100 100)"></line>
+    <line class="clock-tick" x1="100" y1="10" x2="100" y2="22" transform="rotate(30 100 100)"></line>
+    <line class="clock-tick" x1="100" y1="10" x2="100" y2="22" transform="rotate(60 100 100)"></line>
+    <line class="clock-tick" x1="100" y1="10" x2="100" y2="22" transform="rotate(90 100 100)"></line>
+    <line class="clock-tick" x1="100" y1="10" x2="100" y2="22" transform="rotate(120 100 100)"></line>
+    <line class="clock-tick" x1="100" y1="10" x2="100" y2="22" transform="rotate(150 100 100)"></line>
+    <line class="clock-tick" x1="100" y1="10" x2="100" y2="22" transform="rotate(180 100 100)"></line>
+    <line class="clock-tick" x1="100" y1="10" x2="100" y2="22" transform="rotate(210 100 100)"></line>
+    <line class="clock-tick" x1="100" y1="10" x2="100" y2="22" transform="rotate(240 100 100)"></line>
+    <line class="clock-tick" x1="100" y1="10" x2="100" y2="22" transform="rotate(270 100 100)"></line>
+    <line class="clock-tick" x1="100" y1="10" x2="100" y2="22" transform="rotate(300 100 100)"></line>
+    <line class="clock-tick" x1="100" y1="10" x2="100" y2="22" transform="rotate(330 100 100)"></line>
+    <line id="clockHour" class="clock-hand clock-hand--hour" x1="100" y1="100" x2="100" y2="58"></line>
+    <line id="clockMinute" class="clock-hand clock-hand--minute" x1="100" y1="100" x2="100" y2="38"></line>
+    <line id="clockSecond" class="clock-hand clock-hand--second" x1="100" y1="100" x2="100" y2="28"></line>
+    <circle cx="100" cy="100" r="5" class="clock-center"></circle>
+  </svg>
+  <div class="clock-digital">
+    <span id="clockDigital">--:--:--</span>
+    <span id="clockZone" class="clock-zone">Local Time</span>
+  </div>
+</div>
+
+<!-- ===== Navbar ===== -->
+<header class="navbar" id="navbar">
+  <div class="navbar__inner container">
+    <a href="#home" class="navbar__logo">Freelancer <span>Sagor Khan</span></a>
+
+    <button class="navbar__toggle" id="navToggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav class="navbar__nav" id="navMenu">
+      <ul>
+        <li><a href="#home" class="nav-link active" data-section="home">Home</a></li>
+        <li><a href="#about" class="nav-link" data-section="about">About</a></li>
+        <li><a href="#awards" class="nav-link" data-section="awards">Awards</a></li>
+        <li><a href="#skills" class="nav-link" data-section="skills">Skills</a></li>
+        <li><a href="#contact" class="nav-link" data-section="contact">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- ===== Hero Section ===== -->
+  <section class="hero" id="home">
+    <div class="container hero__grid">
+      <div class="hero__content" data-aos>
+        <h1 class="hero__title">
+          <span class="line line--white">Freelancer</span>
+          <span class="line line--gold">Sagor Khan</span>
+        </h1>
+        <p class="hero__subtitle">Digital Marketing Specialist <span class="dot">|</span> Programmer <span class="dot">|</span> Creative Thinker</p>
+
+        <div class="hero__socials">
+          <a href="https://www.facebook.com/share/1BYD641hnh/" target="_blank" rel="noopener noreferrer" class="social-icon social-icon--fb" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="https://www.instagram.com/1sagorkhan1?igsh=Z2NiMDlwbm81eGxm" target="_blank" rel="noopener noreferrer" class="social-icon social-icon--ig" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="https://youtube.com/@freelancersagorkhan" target="_blank" rel="noopener noreferrer" class="social-icon social-icon--yt" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+          <a href="https://x.com/mdSagoralikhan" target="_blank" rel="noopener noreferrer" class="social-icon social-icon--li" aria-label="X (Twitter)"><i class="fa-brands fa-x-twitter"></i></a>
+        </div>
+      </div>
+
+      <div class="hero__visual" data-aos>
+        <div class="hero__photo-wrap">
+          <!-- Replace this image src with your own profile photo any time -->
+          <img src="award pic/Sagor1.jpg" alt="Sagor Khan portrait" class="hero__photo" id="profileImage"
+               fetchpriority="high" decoding="async"
+               onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22500%22 height=%22500%22><rect width=%22500%22 height=%22500%22 fill=%22%23111%22/><text x=%2250%25%22 y=%2250%25%22 fill=%22%23FFC107%22 font-size=%2228%22 font-family=%22sans-serif%22 text-anchor=%22middle%22 dy=%22.3em%22>Your Photo Here</text></svg>'">
+          <span class="floating-chip chip--code"><i class="fa-solid fa-code"></i></span>
+          <span class="floating-chip chip--ai">SK</span>
+          <span class="hero__photo-caption">খাঁচাবন্দি না থেকে, পৃথিবীকে দেখো — পৃথিবীকে জানো।</span>
+        </div>
+      </div>
+    </div>
+    <div class="scroll-cue"><span></span></div>
+  </section>
+
+  <!-- ===== Awards Slider Section ===== -->
+  <section class="awards" id="awards">
+    <div class="container">
+      <div class="section-heading" data-aos>
+        <h2>Award Winning Photos</h2>
+        <div class="heading-underline"><span></span><i class="fa-solid fa-star"></i><span></span></div>
+        <p class="section-hint">Click a photo to open its article room and see details</p>
+      </div>
+
+      <div class="slider" id="awardSlider">
+        <button class="slider__arrow slider__arrow--prev" id="prevArrow" aria-label="Previous slide">
+          <i class="fa-solid fa-arrow-left"></i>
+        </button>
+
+        <div class="slider__track" id="sliderTrack">
+          <!-- Slides are generated by script.js from the slidesData array in data.js.
+               To change photos later, just edit the slidesData array in data.js
+               and replace each "img" URL with your own image path — no HTML editing needed. -->
+        </div>
+
+        <button class="slider__arrow slider__arrow--next" id="nextArrow" aria-label="Next slide">
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+
+      <div class="slider__dots" id="sliderDots"></div>
+    </div>
+
+    <div class="container">
+      <div class="section-heading section-heading--sub" data-aos>
+        <h2>Certificate Collection</h2>
+        <div class="heading-underline"><span></span><i class="fa-solid fa-certificate"></i><span></span></div>
+        <p class="section-hint">Click a certificate to open its article room and see details</p>
+      </div>
+
+      <div class="slider" id="certSlider">
+        <button class="slider__arrow slider__arrow--prev" id="certPrevArrow" aria-label="Previous certificate">
+          <i class="fa-solid fa-arrow-left"></i>
+        </button>
+
+        <div class="slider__track" id="certTrack">
+          <!-- Slides are generated by script.js from the certData array in data.js. -->
+        </div>
+
+        <button class="slider__arrow slider__arrow--next" id="certNextArrow" aria-label="Next certificate">
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+
+      <div class="slider__dots" id="certDots"></div>
+    </div>
+
+    <div class="container" id="videos">
+      <div class="section-heading section-heading--sub" data-aos>
+        <h2>Memorable Videos</h2>
+        <div class="heading-underline"><span></span><i class="fa-solid fa-clapperboard"></i><span></span></div>
+        <p class="section-hint">Click a video to open it — behind the scenes, moments & more</p>
+      </div>
+
+      <div class="slider" id="videoSlider">
+        <button class="slider__arrow slider__arrow--prev" id="videoPrevArrow" aria-label="Previous video">
+          <i class="fa-solid fa-arrow-left"></i>
+        </button>
+
+        <div class="slider__track" id="videoTrack">
+          <!-- Slides are generated by script.js from the videosData array in data.js.
+               To add/change videos later, just edit videosData in data.js —
+               no HTML editing needed. -->
+        </div>
+
+        <button class="slider__arrow slider__arrow--next" id="videoNextArrow" aria-label="Next video">
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+
+      <div class="slider__dots" id="videoDots"></div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       Liquid Glass Photo Strip (slow right-to-left auto-slide)
+       ---------------------------------------------------------
+       TO ADD MORE PHOTOS LATER:
+       Right now only 2 photos are set (nbr.jpg, freelanceridcard.jpg),
+       each appearing twice (once in "First set", once in "Duplicate
+       set") so the loop is seamless. To add a 3rd/4th photo, copy one
+       ".liquid-strip__item" block and paste it into BOTH the first
+       set and the duplicate set, then change its "src".
+       ========================================================= -->
+  <section class="liquid-strip-section" id="liquidStrip">
+    <div class="container">
+      <div class="section-heading section-heading--sub" data-aos>
+        <h2>Government Certifications</h2>
+        <div class="heading-underline"><span></span><i class="fa-solid fa-images"></i><span></span></div>
+      </div>
+    </div>
+
+    <div class="liquid-strip-wrap">
+      <div class="liquid-strip">
+        <!-- The 2 photos below repeat 6 times in a row so the strip is always
+             wider than the screen (this is what removes the empty gap on the
+             right). To add a 3rd/4th photo later, add it into EVERY repeat
+             block below, in the same position, then update the CSS comment
+             near "liquidStripSlide" with the new repeat count if you change
+             how many blocks there are. -->
+        <!-- Repeat 1 -->
+        <div class="liquid-strip__item">
+          <img src="award pic/nbr.jpg" alt="Gallery photo 1" loading="lazy"> <!-- PHOTO 1 -->
+          <span class="liquid-strip__glass"></span>
+          <span class="liquid-strip__sheen"></span>
+        </div>
+        <div class="liquid-strip__item">
+          <img src="award pic/freelanceridcard.jpg" alt="Gallery photo 2" loading="lazy"> <!-- PHOTO 2 -->
+          <span class="liquid-strip__glass"></span>
+          <span class="liquid-strip__sheen"></span>
+        </div>
+        <!-- Repeat 2 -->
+        <div class="liquid-strip__item">
+          <img src="award pic/nbr.jpg" alt="Gallery photo 1" loading="lazy">
+          <span class="liquid-strip__glass"></span>
+          <span class="liquid-strip__sheen"></span>
+        </div>
+        <div class="liquid-strip__item">
+          <img src="award pic/freelanceridcard.jpg" alt="Gallery photo 2" loading="lazy">
+          <span class="liquid-strip__glass"></span>
+          <span class="liquid-strip__sheen"></span>
+        </div>
+        <!-- Repeat 3 -->
+        <div class="liquid-strip__item">
+          <img src="award pic/nbr.jpg" alt="Gallery photo 1" loading="lazy">
+          <span class="liquid-strip__glass"></span>
+          <span class="liquid-strip__sheen"></span>
+        </div>
+        <div class="liquid-strip__item">
+          <img src="award pic/freelanceridcard.jpg" alt="Gallery photo 2" loading="lazy">
+          <span class="liquid-strip__glass"></span>
+          <span class="liquid-strip__sheen"></span>
+        </div>
+        <!-- Repeat 4 -->
+        <div class="liquid-strip__item">
+          <img src="award pic/nbr.jpg" alt="Gallery photo 1" loading="lazy">
+          <span class="liquid-strip__glass"></span>
+          <span class="liquid-strip__sheen"></span>
+        </div>
+        <div class="liquid-strip__item">
+          <img src="award pic/freelanceridcard.jpg" alt="Gallery photo 2" loading="lazy">
+          <span class="liquid-strip__glass"></span>
+          <span class="liquid-strip__sheen"></span>
+        </div>
+        <!-- Repeat 5 -->
+        <div class="liquid-strip__item">
+          <img src="award pic/nbr.jpg" alt="Gallery photo 1" loading="lazy">
+          <span class="liquid-strip__glass"></span>
+          <span class="liquid-strip__sheen"></span>
+        </div>
+        <div class="liquid-strip__item">
+          <img src="award pic/freelanceridcard.jpg" alt="Gallery photo 2" loading="lazy">
+          <span class="liquid-strip__glass"></span>
+          <span class="liquid-strip__sheen"></span>
+        </div>
+        <!-- Repeat 6 -->
+        <div class="liquid-strip__item">
+          <img src="award pic/nbr.jpg" alt="Gallery photo 1" loading="lazy">
+          <span class="liquid-strip__glass"></span>
+          <span class="liquid-strip__sheen"></span>
+        </div>
+        <div class="liquid-strip__item">
+          <img src="award pic/freelanceridcard.jpg" alt="Gallery photo 2" loading="lazy">
+          <span class="liquid-strip__glass"></span>
+          <span class="liquid-strip__sheen"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <style>
+    /* ---- Liquid Glass Photo Strip: styles ---- */
+    .liquid-strip-section{ position:relative; z-index:1; padding-block:20px 60px; }
+    .liquid-strip-wrap{
+      overflow:hidden;
+      -webkit-mask-image:linear-gradient(to right, transparent, black 6%, black 94%, transparent);
+              mask-image:linear-gradient(to right, transparent, black 6%, black 94%, transparent);
+    }
+    .liquid-strip{
+      display:flex;
+      width:max-content;
+      gap:16px;
+      animation:liquidStripSlide 24s linear infinite;
+    }
+    .liquid-strip-wrap:hover .liquid-strip{ animation-play-state:paused; }
+    @keyframes liquidStripSlide{
+      from{ transform:translateX(0); }
+      to{ transform:translateX(-16.6667%); } /* moves by exactly 1 of the 6 repeats */
+    }
+    .liquid-strip__item{
+      position:relative;
+      flex:0 0 auto;
+      width:min(320px, 26vw);
+      aspect-ratio:4/5;
+      border-radius:28px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.22);
+      box-shadow:
+        0 20px 45px rgba(0,0,0,.45),
+        inset 0 1px 0 rgba(255,255,255,.35),
+        inset 0 -1px 0 rgba(255,255,255,.08);
+      isolation:isolate;
+    }
+    .liquid-strip__item img{
+      width:100%; height:100%;
+      object-fit:cover;
+      transition:transform .6s ease;
+    }
+    .liquid-strip__item:hover img{ transform:scale(1.06); }
+    .liquid-strip__glass{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:linear-gradient(
+        180deg,
+        rgba(255,255,255,.10) 0%,
+        rgba(255,255,255,0) 22%,
+        rgba(255,255,255,0) 60%,
+        rgba(255,255,255,.04) 82%,
+        rgba(255,255,255,.14) 100%
+      );
+      mix-blend-mode:overlay;
+      z-index:1;
+    }
+    .liquid-strip__glass::before{
+      content:"";
+      position:absolute;
+      top:8px; left:8px; right:8px;
+      height:30%;
+      border-radius:22px;
+      background:linear-gradient(160deg, rgba(255,255,255,.22), rgba(255,255,255,0) 65%);
+    }
+    .liquid-strip__sheen{
+      position:absolute;
+      inset:-40% -60%;
+      pointer-events:none;
+      z-index:2;
+      background:linear-gradient(
+        115deg,
+        transparent 40%,
+        rgba(255,255,255,.28) 48%,
+        rgba(255,255,255,.08) 52%,
+        transparent 60%
+      );
+      animation:liquidStripSheen 7s ease-in-out infinite;
+    }
+    @keyframes liquidStripSheen{
+      0%{ transform:translateX(-30%); }
+      50%{ transform:translateX(30%); }
+      100%{ transform:translateX(-30%); }
+    }
+    @media (prefers-reduced-motion: reduce){
+      .liquid-strip{ animation:none; }
+      .liquid-strip__sheen{ animation:none; }
+    }
+    @media (max-width: 1024px){
+      .liquid-strip__item{ width:min(260px, 46vw); }
+    }
+    @media (max-width: 560px){
+      .liquid-strip__item{ width:min(210px, 62vw); }
+    }
+  </style>
+
+  <!-- ===== Info Cards Section ===== -->
+  <section class="cards-section" id="cards">
+    <div class="container cards-grid">
+
+      <article class="info-card info-card--gold" id="about" data-aos>
+        <div class="info-card__icon info-card__icon--photo">
+          <!-- Replace this src with your own photo any time -->
+          <img src="award pic/favicon.png" alt="Sagor Khan" id="aboutCardPhoto"
+               loading="lazy" decoding="async"
+               onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22120%22 height=%22120%22><rect width=%22120%22 height=%22120%22 fill=%22%23111%22/><text x=%2250%25%22 y=%2250%25%22 fill=%22%23FFC107%22 font-size=%2212%22 font-family=%22sans-serif%22 text-anchor=%22middle%22 dy=%22.3em%22>Your Photo</text></svg>'">
+        </div>
+        <h3>About Me</h3>
+        <p lang="bn">আমি একজন পেশাদার ডিজিটাল মার্কেটিং স্পেশালিস্ট , এ আই স্পেশালিস্ট এবং  সৃজনশীল চিন্তাবিদ। বিভিন্ন জাতীয় ও আন্তর্জাতিক প্রতিযোগিতায় অংশ নিয়ে এবং ফ্রিল্যান্সিং ক্যাটাগরিতে জাতীয় পর্যায়ে বেশ কিছু পুরস্কার অর্জন করেছি |</p>
+        <button class="btn btn--gold" data-room="about">Read More</button>
+      </article>
+
+      <article class="info-card info-card--purple" id="skills" data-aos>
+        <div class="info-card__icon"><i class="fa-solid fa-camera"></i></div>
+        <h3>My Skills</h3>
+        <ul class="skill-list">
+          <li><i class="fa-solid fa-check"></i> Digital Marketing</li>
+          <li><i class="fa-solid fa-check"></i> AI & Machine Learning</li>
+          <li><i class="fa-solid fa-check"></i> Graphic Design</li>
+          <li><i class="fa-solid fa-check"></i> Video Editing</li>
+          <li><i class="fa-solid fa-check"></i> Content Creation</li>
+        </ul>
+        <button class="btn btn--purple" data-room="skills">View Skills</button>
+      </article>
+
+      <article class="info-card info-card--green" data-aos>
+        <div class="info-card__icon"><i class="fa-solid fa-trophy"></i></div>
+        <h3>My Awards</h3>
+        <p lang="bn">দেশি-বিদেশি বিভিন্ন প্রতিযোগিতায় অংশ নিয়ে অনেক পুরস্কার পেয়েছি। এখানে আমার কিছু নির্বাচিত পুরস্কারপ্রাপ্ত ছবি প্রদর্শন করা হয়েছে।</p>
+        <a href="#awards" class="btn btn--green">View Awards</a>
+      </article>
+
+      <article class="info-card info-card--blue" id="contact" data-aos>
+        <div class="info-card__icon"><i class="fa-solid fa-envelope"></i></div>
+        <h3>Contact Me</h3>
+        <ul class="contact-list">
+          <li><i class="fa-solid fa-envelope"></i> sagorkhan1387@gmail.com</li>
+          <li><i class="fa-solid fa-phone"></i> +880 1315910146</li>
+          <li><i class="fa-solid fa-location-dot"></i> Sirajganj, Bangladesh</li>
+        </ul>
+        <a href="mailto:sagorkhan1387@gmail.com" class="btn btn--blue">Message Me</a>
+      </article>
+
+    </div>
+  </section>
+</main>
+
+
+<!-- ===== Scroll to top ===== -->
+<button class="scroll-top" id="scrollTop" aria-label="Scroll to top">
+  <i class="fa-solid fa-arrow-up"></i>
+</button>
+
+<script src="data.js"></script>
+<script src="clock.js"></script>
+<script src="script.js"></script>
+<section class="gallery-section">
+
+    <div class="gallery-title-wrap">
+
+        <div class="gallery-badge">
+
+            <span class="gallery-dot"></span>
+
+            <span>আমাদের গ্যালারি</span>
+
+        </div>
+
+    </div>
+
+    <h3 class="gallery-subtitle">
+
+        ওয়াইল্ড লাইফ অলিম্পিয়াড এর স্মরণীয় কিছু মুহূর্ত:
+
+    </h3>
+
+    <div class="gallery-slider">
+        <div class="gallery-track">
+            
+            <!-- পুনরায় একই ছবি -->
+            <img src="award pic/wildlife all photos/1.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/2.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/3.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/4.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/5.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/6.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/7.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/8.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/9.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/10.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/11.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/12.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/13.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/14.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/15.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/16.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/17.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/18.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/19.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/20.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/21.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/22.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/23.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/24.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/25.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/26.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/27.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/28.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/29.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/30.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/31.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/32.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/33.JPG" alt="" loading="lazy" decoding="async"> 
+            <img src="award pic/wildlife all photos/34.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/35.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/36.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/37.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/38.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/39.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/40.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/41.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/42.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/43.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/44.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/45.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/46.JPG" alt="" loading="lazy" decoding="async"> 
+            <img src="award pic/wildlife all photos/47.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/48.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/49.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/50.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/51.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/52.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/53.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/54.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/55.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/56.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/57.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/58.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/59.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/60.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/61.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/62.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/63.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/64.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/65.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/66.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/67.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/68.JPG" alt="" loading="lazy" decoding="async">
+            <img src="award pic/wildlife all photos/69.JPG" alt="" loading="lazy" decoding="async">
+
+
+
+
+
+
+        </div>
+    </div>
+</section><!-- ===== Footer ===== -->
+<footer class="footer">
+  <p>&copy; 2026 <span>@Freelancer Sagor Khan</span>. All Rights Reserved.</p>
+</footer>
+<div class="luxury-video-player">
+    <div class="video-glow"></div>
+
+    <video id="showcaseVideo" autoplay muted loop playsinline controls preload="metadata">
+        <source src="videos/tech award.mp4" type="video/mp4">
+    </video>
+
+    <div class="video-badge">LIVE</div>
+
+    <button class="video-close" onclick="closeFloatingVideo()">✕</button>
+</div>
+
+<script>
+function closeFloatingVideo() {
+    document.querySelector('.luxury-video-player').style.display = 'none';
+}
+</script>
+<script src="olympiad-data.js"></script>
+<script src="notice-badge.js"></script>
+<script src="olympiad-hub.js"></script>
+</body>
+</html>

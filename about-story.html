@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>আমার সম্পর্কে | Md. Sagor Ali Khan</title>
+<meta name="description" content="Md. Sagor Ali Khan — যাত্রা, দক্ষতা এবং অভিজ্ঞতা নিয়ে একটি সিনেমাটিক ডিজিটাল অভিজ্ঞতা।">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Hind+Siliguri:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="about-story.css">
+</head>
+<body class="as-body">
+
+<div class="as-noise"></div>
+
+<a href="freelance-journey.html" class="as-back"><i class="fa-solid fa-arrow-left"></i> ফিরে যান</a>
+
+<!-- Compact fixed "liquid glass" title bar — full width, short height,
+     a real blurred sea photo behind frosted glass, iOS Liquid-Glass style -->
+<div class="as-liquid-topbar" id="asLiquidTopbar">
+  <i class="fa-solid fa-user-astronaut as-liquid-topbar-icon"></i>
+  <span class="as-liquid-topbar-text">আমার সম্পর্কে</span>
+</div>
+
+<!-- =========================================================
+     SECTION 1 — Real 3D globe: remittance flow into Bangladesh
+     (built with WebGL/Three.js from real Bangladesh Bank /
+     IOM-DTM 2025 remittance data — not a static image)
+     ========================================================= -->
+<section class="as-map" id="asMap">
+
+  <div class="as-globe-host">
+    <canvas id="asGlobeCanvas"></canvas>
+    <div class="as-globe-vignette"></div>
+  </div>
+
+  <div class="as-globe-loading" id="asGlobeLoading">
+    <i class="fa-solid fa-earth-asia fa-spin"></i>
+    <span>গ্লোব লোড হচ্ছে…</span>
+  </div>
+
+  <div class="as-map-caption">
+    <p class="as-eyebrow">রেমিট্যান্স ও বৈশ্বিক আয় · Bangladesh Bank / IOM‑DTM ২০২৫</p>
+    <h2>বিশ্বের বিভিন্ন প্রান্ত থেকে বাংলাদেশে ডলার প্রবেশ করছে</h2>
+    <p class="as-map-total"><span id="asMapTotal">$32.8B</span> মোট রেমিট্যান্স, ২০২৫ · <i class="fa-solid fa-arrows-rotate"></i> ঘোরান / টেনে দেখুন</p>
+  </div>
+
+  <div class="as-scroll-cue"><span></span><i>নিচে স্ক্রল করুন</i></div>
+</section>
+
+<!-- =========================================================
+     SECTION 2 — Hero
+     ========================================================= -->
+<header class="as-hero" id="asHero">
+  <h1 class="as-hero-title">
+    <span class="as-reveal as-line as-line--sm">আমি</span>
+    <span class="as-reveal as-line as-gold">মোঃ সাগর আলী খান</span>
+  </h1>
+  <p class="as-hero-sub as-reveal">
+    I'm a Digital Marketing Specialist, Cybersecurity Specialist, Programmer & 3D Animation Creator.
+     Creative Thinker delivering innovative, secure, and engaging digital solutions.
+  </p>
+  <div class="as-hero-cta as-reveal">
+    <a href="#asSphere" class="as-btn as-btn--solid"><i class="fa-solid fa-diagram-project"></i> View My Work</a>
+    <a href="#asContact" class="as-btn as-btn--ghost"><i class="fa-solid fa-handshake"></i> Hire Me</a>
+  </div>
+  <div class="as-scroll-cue as-scroll-cue--dark"><span></span></div>
+</header>
+
+<!-- =========================================================
+     SECTION 3 — Skills Solar System
+     ========================================================= -->
+<section class="as-galaxy" id="asGalaxy">
+  <div class="as-section-head as-galaxy-head">
+    <div class="as-galaxy-glass">
+      <i class="fa-solid fa-satellite as-galaxy-glass-icon"></i>
+      <h2>আমার দক্ষতাগুলো ঘুরছে কক্ষপথে</h2>
+    </div>
+    <p class="as-section-hint">যেকোনো গ্রহে হোভার বা ক্লিক করে বিস্তারিত দেখুন</p>
+  </div>
+
+  <div class="as-galaxy-stage">
+    <div class="as-orbit-system" id="asOrbitSystem">
+      <div class="as-sun" id="asSun">
+        <span>SK</span>
+      </div>
+      <div class="as-orbit-ring as-orbit-ring--1"></div>
+      <div class="as-orbit-ring as-orbit-ring--2"></div>
+      <div class="as-orbit-ring as-orbit-ring--3"></div>
+      <!-- planets injected by JS -->
+    </div>
+
+    <aside class="as-info-panel" id="asInfoPanel">
+      <div class="as-info-empty">
+        <i class="fa-solid fa-satellite-dish"></i>
+        <p>একটি স্কিল প্ল্যানেটে ক্লিক করুন</p>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- =========================================================
+     SECTION 4 — Experience Timeline
+     ========================================================= -->
+<section class="as-timeline" id="asTimeline">
+  <div class="as-section-head as-timeline-head">
+    <div class="as-timeline-glass">
+      <i class="fa-solid fa-timeline as-timeline-glass-icon"></i>
+      <h2>শেখা থেকে পেশাদার অভিজ্ঞতা পর্যন্ত</h2>
+    </div>
+  </div>
+
+  <div class="as-timeline-track">
+    <div class="as-timeline-fill" id="asTimelineFill"></div>
+
+    <div class="as-timeline-item">
+      <div class="as-timeline-dot"></div>
+      <div class="as-timeline-card">
+        <span class="as-timeline-tag">শুরু</span>
+        <span class="as-timeline-year">2017</span>
+        <h3>Started Learning</h3>
+        <p>প্রোগ্রামিং ও ডিজিটাল মার্কেটিং এর মৌলিক বিষয় দিয়ে যাত্রা শুরু — কৌতূহল থেকে অনুশীলন পর্যন্ত।</p>
+      </div>
+    </div>
+
+    <div class="as-timeline-item">
+      <div class="as-timeline-dot"></div>
+      <div class="as-timeline-card">
+        <span class="as-timeline-tag">মাইলফলক</span>
+        <span class="as-timeline-year">2019</span>
+        <h3>First Freelance Project</h3>
+        <p>প্রথম বাস্তব ক্লায়েন্ট প্রজেক্ট — শেখা জ্ঞানকে বাস্তব ফলাফলে রূপান্তর করার প্রথম অভিজ্ঞতা।</p>
+      </div>
+    </div>
+
+    <div class="as-timeline-item">
+      <div class="as-timeline-dot"></div>
+      <div class="as-timeline-card">
+        <span class="as-timeline-tag">অগ্রগতি</span>
+        <span class="as-timeline-year">2020–2021</span>
+        <h3>Professional Development</h3>
+        <p>দক্ষতার পরিধি বৃদ্ধি — নতুন টুলস, উন্নত কৌশল এবং একাধিক ইন্ডাস্ট্রিতে কাজের অভিজ্ঞতা অর্জন।</p>
+      </div>
+    </div>
+
+    <div class="as-timeline-item">
+      <div class="as-timeline-dot"></div>
+      <div class="as-timeline-card">
+        <span class="as-timeline-tag">বর্তমান</span>
+        <span class="as-timeline-year">2022-2026-বর্তমান</span>
+        <h3>Current Experience</h3>
+        <p>এখন আমি ক্লায়েন্টদের জন্য পূর্ণাঙ্গ ডিজিটাল সমাধান তৈরি করি — কৌশল থেকে বাস্তবায়ন পর্যন্ত।</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     SECTION 5 — Previous Works (floating liquid-glass boxes)
+     ========================================================= -->
+<section class="as-showcase-section" id="asSphere">
+  <div class="as-section-head">
+    <p class="as-eyebrow">Previous Works</p>
+    <h2>আমার পূর্ববর্তী কাজগুলো</h2>
+  </div>
+
+  <div class="as-showcase-stage" id="asShowcaseStage"><!-- glass boxes injected by JS --></div>
+</section>
+
+<!-- =========================================================
+     SECTION 6 — Stats + Contact control panel (merged)
+     ========================================================= -->
+<section class="as-contact" id="asContact">
+  <div class="as-contact-bg" aria-hidden="true">
+    <i class="fa-solid fa-tower-broadcast as-contact-tower as-contact-tower--1"></i>
+    <i class="fa-solid fa-tower-cell as-contact-tower as-contact-tower--2"></i>
+    <i class="fa-solid fa-envelope as-contact-mail as-contact-mail--1"></i>
+    <i class="fa-solid fa-envelope as-contact-mail as-contact-mail--2"></i>
+    <i class="fa-solid fa-envelope as-contact-mail as-contact-mail--3"></i>
+    <i class="fa-solid fa-envelope as-contact-mail as-contact-mail--4"></i>
+    <span class="as-contact-glasssheet"></span>
+  </div>
+
+  <div class="as-stats-grid">
+    <div class="as-stat">
+      <span class="as-stat-num" data-count="60">0</span><span class="as-stat-plus">+</span>
+      <p>Projects Completed</p>
+    </div>
+    <div class="as-stat">
+      <span class="as-stat-num" data-count="40">0</span><span class="as-stat-plus">+</span>
+      <p>Happy Clients</p>
+    </div>
+    <div class="as-stat">
+      <span class="as-stat-num" data-count="6">0</span><span class="as-stat-plus">+</span>
+      <p>Years of Experience</p>
+    </div>
+    <div class="as-stat">
+      <span class="as-stat-num" data-count="20">0</span><span class="as-stat-plus">+</span>
+      <p>Technologies</p>
+    </div>
+  </div>
+
+  <div class="as-section-head as-contact-head">
+    <div class="as-contact-glass">
+      <i class="fa-solid fa-headset as-contact-glass-icon"></i>
+      <h2>যোগাযোগ কন্ট্রোল প্যানেল</h2>
+    </div>
+  </div>
+
+  <div class="as-contact-panel">
+    <a class="as-contact-btn" href="mailto:sagorkhan1387@gmail.com">
+      <i class="fa-solid fa-envelope"></i><span>Email</span>
+    </a>
+    <a class="as-contact-btn" href="https://wa.me/8801315910146" target="_blank" rel="noopener">
+      <i class="fa-brands fa-whatsapp"></i><span>WhatsApp</span>
+    </a>
+    <a class="as-contact-btn" href="#" target="_blank" rel="noopener">
+      <i class="fa-brands fa-facebook-f"></i><span>Facebook</span>
+    </a>
+    <a class="as-contact-btn" href="#" target="_blank" rel="noopener">
+      <i class="fa-brands fa-linkedin-in"></i><span>LinkedIn</span>
+    </a>
+    <a class="as-contact-btn as-contact-btn--gold" href="#">
+      <i class="fa-solid fa-file-arrow-down"></i><span>Download CV</span>
+    </a>
+  </div>
+</section>
+
+<footer class="footer">
+  <p>&copy; 2026 <span>@Freelancer Sagor Khan</span>. All Rights Reserved.</p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="about-story.js"></script>
+</body>
+</html>

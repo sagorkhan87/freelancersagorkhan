@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Article Room | Freelancer Sagor Khan</title>
+<meta name="description" content="Publish articles and photos for Freelancer Sagor Khan's portfolio.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Hind+Siliguri:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="room.css">
+</head>
+<body class="room-body">
+
+<!-- ===== Sliding notice bar ===== -->
+<div class="notice-bar" id="noticeBar">
+  <div class="notice-track" id="noticeTrack"></div>
+</div>
+
+<!-- ===== Background FX layer ===== -->
+<div class="bg-fx">
+  <canvas id="particle-canvas"></canvas>
+  <div class="circuit-lines"></div>
+  <div class="glow-orb glow-orb--gold"></div>
+  <div class="glow-orb glow-orb--blue"></div>
+</div>
+
+<canvas id="moneyCanvas" class="money-canvas"></canvas>
+
+<!-- ===== Live local-time clock ===== -->
+<div class="clock-widget" id="clockWidget">
+  <svg class="clock-face" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="100" cy="100" r="94" class="clock-ring"></circle>
+    <line class="clock-tick" x1="100" y1="10" x2="100" y2="22" transform="rotate(0 100 100)"></line>
+    <line class="clock-tick" x1="100" y1="10" x2="100" y2="22" transform="rotate(30 100 100)"></line>
+    <line class="clock-tick" x1="100" y1="10" x2="100" y2="22" transform="rotate(60 100 100)"></line>
+    <line class="clock-tick" x1="100" y1="10" x2="100" y2="22" transform="rotate(90 100 100)"></line>
+    <line class="clock-tick" x1="100" y1="10" x2="100" y2="22" transform="rotate(120 100 100)"></line>
+    <line class="clock-tick" x1="100" y1="10" x2="100" y2="22" transform="rotate(150 100 100)"></line>
+    <line class="clock-tick" x1="100" y1="10" x2="100" y2="22" transform="rotate(180 100 100)"></line>
+    <line class="clock-tick" x1="100" y1="10" x2="100" y2="22" transform="rotate(210 100 100)"></line>
+    <line class="clock-tick" x1="100" y1="10" x2="100" y2="22" transform="rotate(240 100 100)"></line>
+    <line class="clock-tick" x1="100" y1="10" x2="100" y2="22" transform="rotate(270 100 100)"></line>
+    <line class="clock-tick" x1="100" y1="10" x2="100" y2="22" transform="rotate(300 100 100)"></line>
+    <line class="clock-tick" x1="100" y1="10" x2="100" y2="22" transform="rotate(330 100 100)"></line>
+    <line id="clockHour" class="clock-hand clock-hand--hour" x1="100" y1="100" x2="100" y2="58"></line>
+    <line id="clockMinute" class="clock-hand clock-hand--minute" x1="100" y1="100" x2="100" y2="38"></line>
+    <line id="clockSecond" class="clock-hand clock-hand--second" x1="100" y1="100" x2="100" y2="28"></line>
+    <circle cx="100" cy="100" r="5" class="clock-center"></circle>
+  </svg>
+  <div class="clock-digital">
+    <span id="clockDigital">--:--:--</span>
+    <span id="clockZone" class="clock-zone">Local Time</span>
+  </div>
+</div>
+
+<!-- ===== Room header ===== -->
+<header class="room-header" id="roomHeader">
+  <div class="container room-header__inner">
+    <a href="index.html" class="room-back"><i class="fa-solid fa-arrow-left"></i> Back to Portfolio</a>
+    <div class="room-header__badge" id="roomIcon"><i class="fa-solid fa-newspaper"></i></div>
+    <h1 id="roomTitle">Articles</h1>
+    <p id="roomSubtitle">Publish your story here</p>
+  </div>
+</header>
+
+<main class="room-main">
+  <div class="container">
+
+    <!-- =====================================================
+         NEW gallery + details view — used for the "about",
+         "skills" and "awards" pages (content comes from
+         roomContent.js). room.js fills this in and toggles
+         it on/off depending on which page this is.
+    ===================================================== -->
+    <div id="galleryRoot" hidden></div>
+
+    <!-- =====================================================
+         Legacy article composer — still used for the
+         "Contact Me" room and any award/certificate room
+         (award-0, cert-1, etc.) that isn't one of the 3
+         redesigned pages above.
+    ===================================================== -->
+    <div id="legacyRoot">
+
+      <!-- ===== Composer ===== -->
+      <section class="composer" id="composer">
+        <h2 class="composer__heading"><i class="fa-solid fa-pen-nib"></i> <span id="composerLabel">Write a new article</span></h2>
+
+        <form id="articleForm" class="composer__form">
+          <label class="field">
+            <span>Title</span>
+            <input type="text" id="articleTitle" placeholder="Give your article a title" required maxlength="120">
+          </label>
+
+          <label class="field">
+            <span>Article text</span>
+            <textarea id="articleContent" rows="6" placeholder="Write your article here — you can add as much as you like." required></textarea>
+          </label>
+
+          <label class="field">
+            <span>Photos (add as many as you like — they'll be shown 4 per row, in the order you add them)</span>
+            <input type="file" id="articleImages" accept="image/*" multiple>
+          </label>
+
+          <div class="image-preview" id="imagePreview"></div>
+
+          <div class="composer__actions">
+            <button type="submit" class="btn btn--gold" id="submitBtn"><i class="fa-solid fa-upload"></i> Publish Article</button>
+            <button type="button" class="btn btn--ghost" id="cancelEditBtn" hidden>Cancel edit</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- ===== Published articles ===== -->
+      <section class="article-list-section">
+        <div class="section-heading" style="margin-bottom:28px;">
+          <h2>Published Articles</h2>
+          <div class="heading-underline"><span></span><i class="fa-solid fa-images"></i><span></span></div>
+        </div>
+
+        <div id="articleList" class="article-list">
+          <!-- Articles render here via room.js -->
+        </div>
+
+        <p class="empty-state" id="emptyState">No articles yet — publish your first one above.</p>
+      </section>
+
+    </div>
+
+  </div>
+</main>
+
+<footer class="footer">
+  <p>&copy; 2025 <span>Freelancer Sagor Khan</span>. All Rights Reserved.</p>
+</footer>
+
+<button class="scroll-top" id="scrollTop" aria-label="Scroll to top">
+  <i class="fa-solid fa-arrow-up"></i>
+</button>
+
+<!-- ===== Lightbox ===== -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox__close" id="lightboxClose" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+  <button class="lightbox__nav lightbox__nav--prev" id="lightboxPrev" aria-label="Previous photo"><i class="fa-solid fa-chevron-left"></i></button>
+  <img id="lightboxImg" src="" alt="Article photo">
+  <button class="lightbox__nav lightbox__nav--next" id="lightboxNext" aria-label="Next photo"><i class="fa-solid fa-chevron-right"></i></button>
+  <span class="lightbox__count" id="lightboxCount"></span>
+</div>
+
+<script src="data.js"></script>
+<script src="roomContent.js"></script>
+<script src="clock.js"></script>
+<script src="room.js"></script>
+</body>
+</html>

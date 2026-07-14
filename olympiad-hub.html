@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Olympiad Hub — বাংলাদেশ থেকে বিশ্বমঞ্চে</title>
+<meta name="description" content="বাংলাদেশের চলমান ও আসন্ন জাতীয়-আন্তর্জাতিক অলিম্পিয়াড ও প্রতিযোগিতাসমূহের তালিকা — নিবন্ধনের সময়সীমা, আয়োজক ও বিস্তারিত তথ্যসহ।">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Da+2:wght@600;700;800&family=Hind+Siliguri:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="olympiad-hub.css">
+</head>
+<body>
+
+<div class="oly-wrap">
+
+  <div class="oly-topbar">
+    <a class="oly-back" href="index.html">&larr; হোমপেজে ফিরুন</a>
+    <div class="oly-brand"><b>SAGOR</b> KHAN</div>
+  </div>
+
+  <!-- ============ HERO: EARTH + FLAGS + TITLE ============ -->
+  <section class="oly-hero">
+    <div class="oly-particles" id="olyParticles"></div>
+
+    <div class="oly-map-frame">
+
+      <div class="oly-flag left" aria-hidden="true">
+        <svg viewBox="0 0 160 110">
+          <defs>
+            <filter id="olyWaveL" x="-20%" y="-20%" width="140%" height="140%">
+              <feTurbulence type="fractalNoise" numOctaves="2" seed="4" baseFrequency="0.012 0.045" result="turbL">
+                <animate attributeName="baseFrequency" dur="7s" values="0.012 0.045;0.02 0.06;0.012 0.045" repeatCount="indefinite"/>
+              </feTurbulence>
+              <feDisplacementMap in="SourceGraphic" in2="turbL" scale="9" xChannelSelector="R" yChannelSelector="G"/>
+            </filter>
+          </defs>
+          <line x1="150" y1="4" x2="150" y2="106" stroke="#caa955" stroke-width="3"/>
+          <g filter="url(#olyWaveL)">
+            <rect x="10" y="8" width="130" height="82" fill="#006a4e"/>
+            <circle cx="82" cy="49" r="26" fill="#f42a41"/>
+          </g>
+        </svg>
+      </div>
+
+      <div class="oly-flag right" aria-hidden="true">
+        <svg viewBox="0 0 160 110">
+          <defs>
+            <filter id="olyWaveR" x="-20%" y="-20%" width="140%" height="140%">
+              <feTurbulence type="fractalNoise" numOctaves="2" seed="9" baseFrequency="0.012 0.045" result="turbR">
+                <animate attributeName="baseFrequency" dur="7.5s" values="0.012 0.045;0.02 0.06;0.012 0.045" repeatCount="indefinite"/>
+              </feTurbulence>
+              <feDisplacementMap in="SourceGraphic" in2="turbR" scale="9" xChannelSelector="R" yChannelSelector="G"/>
+            </filter>
+          </defs>
+          <line x1="10" y1="4" x2="10" y2="106" stroke="#caa955" stroke-width="3"/>
+          <g filter="url(#olyWaveR)">
+            <rect x="20" y="8" width="130" height="82" fill="#006a4e"/>
+            <circle cx="78" cy="49" r="26" fill="#f42a41"/>
+          </g>
+        </svg>
+      </div>
+
+      <!-- ===== realistic rotating 3D Earth, orbit-locked onto Bangladesh ===== -->
+      <div class="oly-map-stage">
+        <div class="oly-earth-stage" id="olyEarthStage">
+          <div class="oly-earth-atmosphere"></div>
+
+          <div class="oly-earth" id="olyEarth">
+            <div class="oly-earth-texture" id="olyEarthTexture"></div>
+            <div class="oly-earth-clouds" id="olyEarthClouds"></div>
+            <div class="oly-earth-shading"></div>
+            <div class="oly-earth-specular"></div>
+            <div class="oly-earth-sweep"></div>
+          </div>
+
+          <!-- radar beacon locked onto Bangladesh's true coordinates (lon 90.4°E, lat 23.8°N) -->
+          <div class="oly-bd-pin" id="olyBdPin">
+            <span class="oly-pin-ring r1"></span>
+            <span class="oly-pin-ring r2"></span>
+            <span class="oly-pin-ring r3"></span>
+            <span class="oly-pin-core"></span>
+            <span class="oly-pin-label">বাংলাদেশ</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <p class="oly-eyebrow">✈ স্বপ্ন দেখতে নেই মানা ✈</p>
+    <h1 class="oly-title">বাংলাদেশ থেকে বিশ্বমঞ্চে</h1>
+    <p class="oly-subtitle">চলমান জাতীয় ও আন্তর্জাতিক অলিম্পিয়াড, প্রতিযোগিতা ও সুযোগসমূহ</p>
+
+    <!-- ============ SLIDING GLOW NOTICE BAR ============ -->
+    <!-- Edit NOTICE_TEXTS in js/olympiad-data.js to change what this bar says -->
+    <div class="oly-notice-outer">
+      <div class="oly-notice-track" id="olyNoticeTrack"></div>
+    </div>
+  </section>
+
+  <!-- ============ ARTICLE LISTING ============ -->
+  <section class="oly-section">
+    <div class="oly-section-head">
+      <p class="oly-eyebrow">সব অলিম্পিয়াড</p>
+      <h2 class="oly-section-title">চলমান ও আসন্ন প্রতিযোগিতাসমূহ</h2>
+    </div>
+
+    <div class="oly-cards" id="olyCards"></div>
+  </section>
+
+  <footer class="oly-footer">
+    <b>Freelancer Sagor Khan</b> — যেকোনো কার্ডে ক্লিক করলে সংশ্লিষ্ট অফিসিয়াল ওয়েবসাইট নতুন ট্যাবে খুলবে।
+  </footer>
+
+</div>
+
+<!-- ★ Edit js/olympiad-data.js to add/change Olympiads — no other file needs to change -->
+<script src="olympiad-data.js"></script>
+<script src="olympiad-hub.js"></script>
+</body>
+</html>

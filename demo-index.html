@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Demo — Notice Badge Integration</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/notice-badge.css">
+<style>
+  body{ margin:0; background:#050507; font-family:sans-serif; }
+  /* data-hero marks the container the badge should attach to —
+     add this attribute to YOUR existing hero section */
+  .demo-hero{
+    position:relative;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#f6f1e4;
+  }
+</style>
+</head>
+<body>
+  <section class="demo-hero" data-hero>
+    <h1 style="opacity:.35">Your existing hero content stays exactly as-is</h1>
+  </section>
+
+  <script src="js/notice-badge.js"></script>
+</body>
+</html>

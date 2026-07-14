@@ -1,0 +1,155 @@
+/* =========================================================
+   OLYMPIAD NOTICE BADGE — Liquid Glass, Black & Gold
+   Drop this <link> into your existing portfolio's <head>.
+   Scoped entirely under .oly-badge* — will not collide with
+   your existing styles.
+   ========================================================= */
+
+:root{
+  --oly-void:#050507;
+  --oly-gold-1:#ffe9a8;   /* hottest highlight   */
+  --oly-gold-2:#f0c14b;   /* core gold           */
+  --oly-gold-3:#a8791c;   /* deep shadow gold    */
+  --oly-glass:rgba(18,16,10,0.55);
+  --oly-glass-edge:rgba(255,225,150,0.35);
+  --oly-text:#fbf6e9;
+}
+
+.oly-badge-wrap{
+  position:absolute;
+  top:22px;
+  right:22px;
+  z-index:60;
+  opacity:0;
+  transform:translateY(-14px) scale(.92);
+  animation:olyBadgeIn .9s cubic-bezier(.19,1,.22,1) .4s forwards,
+            olyFloat 5.5s ease-in-out 1.3s infinite;
+  filter:drop-shadow(0 8px 24px rgba(0,0,0,.55));
+}
+
+/* Second badge — sits directly under the first one, identical style */
+.oly-badge-wrap--freelance{
+  top:74px;
+  animation:olyBadgeIn .9s cubic-bezier(.19,1,.22,1) .6s forwards,
+            olyFloat 5.5s ease-in-out 1.5s infinite;
+}
+
+@media (max-width: 640px){
+  .oly-badge-wrap{ top:14px; right:14px; transform-origin:top right; }
+  .oly-badge-wrap--freelance{ top:60px; }
+  .oly-badge{ padding:8px 14px 8px 12px !important; }
+  .oly-badge-text{ font-size:12.5px !important; }
+  .oly-badge-dot{ width:7px !important; height:7px !important; }
+}
+
+@keyframes olyBadgeIn{
+  to{ opacity:1; transform:translateY(0) scale(1); }
+}
+@keyframes olyFloat{
+  0%,100%{ transform:translateY(0); }
+  50%{ transform:translateY(-6px); }
+}
+
+.oly-badge{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:9px 18px 9px 14px;
+  border-radius:999px;
+  cursor:pointer;
+  border:1px solid var(--oly-glass-edge);
+  background:
+    linear-gradient(120deg, rgba(255,255,255,.10), rgba(255,255,255,.02) 40%),
+    var(--oly-glass);
+  backdrop-filter:blur(18px) saturate(160%);
+  -webkit-backdrop-filter:blur(18px) saturate(160%);
+  overflow:hidden;
+  isolation:isolate;
+  transition:transform .35s cubic-bezier(.19,1,.22,1), border-color .35s ease;
+  -webkit-tap-highlight-color:transparent;
+}
+.oly-badge:hover{
+  transform:translateY(-2px) scale(1.035);
+  border-color:rgba(255,225,150,.7);
+}
+.oly-badge:active{ transform:translateY(0) scale(.98); }
+
+/* breathing glow behind the capsule */
+.oly-badge::before{
+  content:"";
+  position:absolute;
+  inset:-40%;
+  background:radial-gradient(circle at 30% 30%, rgba(240,193,75,.45), transparent 60%);
+  z-index:-1;
+  animation:olyGlowBreathe 3.6s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes olyGlowBreathe{
+  0%,100%{ opacity:.35; }
+  50%{ opacity:.85; }
+}
+
+/* liquid light sweep across the glass surface */
+.oly-badge::after{
+  content:"";
+  position:absolute;
+  top:-50%;
+  left:-30%;
+  width:35%;
+  height:200%;
+  background:linear-gradient(100deg, transparent, rgba(255,255,255,.55) 45%, transparent 90%);
+  transform:rotate(18deg);
+  animation:olySweep 3.8s ease-in-out infinite;
+  animation-delay:1.6s;
+  pointer-events:none;
+}
+@keyframes olySweep{
+  0%{ left:-40%; opacity:0; }
+  8%{ opacity:.8; }
+  35%{ left:130%; opacity:0; }
+  100%{ left:130%; opacity:0; }
+}
+
+.oly-badge-dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:#32ff7e;
+  box-shadow:0 0 8px 2px #32ff7e;
+  flex:0 0 auto;
+  animation:olyPulseDot 1.8s ease-in-out infinite;
+}
+@keyframes olyPulseDot{
+  0%,100%{ transform:scale(1); opacity:1; }
+  50%{ transform:scale(1.5); opacity:.55; }
+}
+
+.oly-badge-text{
+  font-family:"Hind Siliguri","Baloo Da 2",sans-serif;
+  font-weight:800;
+  font-size:14.5px;
+  letter-spacing:.2px;
+  white-space:nowrap;
+  color:var(--oly-gold-1);
+  background:linear-gradient(180deg, var(--oly-gold-1) 10%, var(--oly-gold-2) 55%, var(--oly-gold-3) 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  text-shadow:0 0 14px rgba(240,193,75,.65), 0 0 30px rgba(240,193,75,.35);
+}
+
+@media (prefers-reduced-motion: reduce){
+  .oly-badge-wrap, .oly-badge::before, .oly-badge::after, .oly-badge-dot{
+    animation:none !important;
+  }
+  .oly-badge-wrap{ opacity:1; transform:none; }
+}
+
+/* page-exit fade used right before navigating to the hub */
+.oly-page-exit{
+  animation:olyPageExit .5s cubic-bezier(.6,0,.85,0) forwards;
+}
+@keyframes olyPageExit{
+  to{ opacity:0; filter:blur(6px); transform:scale(.985); }
+}
